@@ -34,7 +34,11 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/course', require('./routes/course'));
 
 // Static File Uploads with CORS
-app.use('/uploads', cors(), express.static(path.join(__dirname, 'uploads'), {
+app.use('/uploads', cors({
+    origin: 'https://talacademy.onrender.com',
+    methods: ['GET', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+}), express.static(path.join(__dirname, 'uploads'), {
     setHeaders: (res, path) => {
         if (path.endsWith('.pdf')) {
             res.setHeader('Content-Disposition', 'inline'); // View in browser
