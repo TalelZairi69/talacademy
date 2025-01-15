@@ -9,23 +9,20 @@ const app = express();
 
 // Connect to MongoDB
 connectDB();
-
-// CORS Configuration
 app.use(cors({
-    origin: '*', // Allow all origins for testing purposes
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
+    origin: 'https://talacademy.onrender.com', // Allow only your frontend's domain
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Allow specific methods
+    allowedHeaders: ['Content-Type', 'Authorization'], // Spescify allowed headers
+    credentials: true, // Allow cookies or authorization headers
 }));
-
-
-// Handle Preflight Requests explicitly (Optional if above is used)
-app.options('*', (req, res) => {
-    res.header('Access-Control-Allow-Origin', 'https://talacademy.onrender.com');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.sendStatus(204); // No Content
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', 'https://talacademy.onrender.com');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    next();
 });
+
+app.options('*', cors()); // Automatically respond to OPTIONS requests
 
 // Middleware
 app.use(bodyParser.json());
@@ -65,11 +62,6 @@ app.use((req, res, next) => {
     next();
 });
 
-// Prevent caching for CORS responses
-app.use((req, res, next) => {
-    res.setHeader('Cache-Control', 'no-store');
-    next();
-});
 
 // Global Error Handler (to ensure all responses include headers)
 app.use((err, req, res, next) => {
@@ -82,4 +74,10 @@ app.use((err, req, res, next) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
+});
+app.use((req, res, next) => {
+    console.log('Request Origin:', req.headers.origin);
+    console.log('Request Method:', req.method);
+    console.log('Request Headers:', req.headers);
+    next();
 });
