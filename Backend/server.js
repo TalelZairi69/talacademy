@@ -12,11 +12,12 @@ connectDB();
 
 // CORS Configuration
 app.use(cors({
-    origin: 'https://talacademy.onrender.com', // Replace with your frontend URL
+    origin: '*', // Allow all origins for testing purposes
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true, // Enable for cookies/auth headers
+    credentials: true,
 }));
+
 
 // Handle Preflight Requests explicitly (Optional if above is used)
 app.options('*', (req, res) => {
