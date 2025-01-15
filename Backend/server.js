@@ -1,17 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require("cors");
+const cors = require('cors');
 const path = require('path'); // For handling file paths
 const connectDB = require('./config/db');
 require('dotenv').config();
 
 const app = express();
 
+// Connect to MongoDB
 connectDB();
-app.use((req, res, next) => {
-    res.header({"Access-Control-Allow-Origin": "*"});
-    next();
-  }) 
+
+// Middleware
+app.use(cors({
+    origin: ['https://talacademy.onrender.com', 'https://talacademy.onrender.com', 'https://talacademy.onrender.com'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
+}));
+
 app.use(bodyParser.json());
 
 // API Routes
@@ -23,14 +28,18 @@ app.get('/', (req, res) => {
     res.send('Backend is running!');
 });
 
-// Static Files
 app.use(express.static(path.join(__dirname, '../FrontEnd')));
 
 app.get('/FrontEnd/dashboard/courses/:courseCode', (req, res) => {
     res.sendFile(path.join(__dirname, '../FrontEnd/dashboard/courses/course-details.html'));
 });
 
-// File Uploads
+
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});
 app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
     setHeaders: (res, path) => {
         if (path.endsWith('.pdf')) {
@@ -39,19 +48,14 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
         }
     }
 }));
+const { S3Client } = require('@aws-sdk/client-s3');
+
 
 // AWS S3 configuration
-const { S3Client } = require('@aws-sdk/client-s3');
 const s3 = new S3Client({
     region: process.env.AWS_REGION,
     credentials: {
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
-});
-
-// Start the Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
 });
