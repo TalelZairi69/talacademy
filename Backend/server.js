@@ -15,7 +15,7 @@ app.use(cors({
     origin: 'https://talacademy.onrender.com',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
-}));s
+}));
 
 // Handle Preflight Requests
 app.options('*', cors());
