@@ -13,12 +13,18 @@ connectDB();
 // CORS Configuration
 app.use(cors({
     origin: 'https://talacademy.onrender.com',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    credentials: true
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Include OPTIONS
+    allowedHeaders: ['Content-Type', 'Authorization'], // Explicitly include headers
+    credentials: true // Include credentials if needed
 }));
 
-// Handle Preflight Requests
-app.options('*', cors());
+// Handle Preflight Requests explicitly
+app.options('*', (req, res) => {
+    res.header('Access-Control-Allow-Origin', 'https://talacademy.onrender.com');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.sendStatus(204); // No Content
+});
 
 // Middleware
 app.use(bodyParser.json());
@@ -31,8 +37,8 @@ app.use('/api/course', require('./routes/course'));
 app.use('/uploads', cors(), express.static(path.join(__dirname, 'uploads'), {
     setHeaders: (res, path) => {
         if (path.endsWith('.pdf')) {
-            res.setHeader('Content-Disposition', 'inline');
-            res.setHeader('Content-Type', 'application/pdf');
+            res.setHeader('Content-Disposition', 'inline'); // View in browser
+            res.setHeader('Content-Type', 'application/pdf'); // Explicit MIME type
         }
     }
 }));
@@ -56,4 +62,16 @@ const s3 = new S3Client({
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
         secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
     },
+});
+
+// Debugging Middleware
+app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+    next();
+});
+
+// Prevent caching for CORS responses
+app.use((req, res, next) => {
+    res.setHeader('Cache-Control', 'no-store');
+    next();
 });
