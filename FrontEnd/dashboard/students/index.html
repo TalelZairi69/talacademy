@@ -201,11 +201,12 @@
             try {
                 console.log('Attempting to fetch course students...');
                 const response = await fetch('https://talelacademybackend.onrender.com/api/course/students', {
-                    method: 'GET',
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                });
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+    },
+});
 
                 if (response.ok) {
                     const { data } = await response.json();

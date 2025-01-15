@@ -139,37 +139,32 @@ router.get('/my-courses', verifyToken, async (req, res) => {
 });
 
 
-router.get(
-    '/students',
-    cors(), // Apply CORS middleware to this route only
-    verifyToken,
-    async (req, res) => {
-        try {
-            const courses = await Course.find({ 'users.userId': req.user.id, 'users.role': 'teacher' })
-                .populate('users.userId', 'username email');
+router.get('/students', verifyToken, async (req, res) => {
+    try {
+        const courses = await Course.find({ 'users.userId': req.user.id, 'users.role': 'teacher' })
+            .populate('users.userId', 'username email');
 
-            const data = courses.map(course => ({
-                courseName: course.subject,
-                courseCode: course.courseCode,
-                highschool: course.highschool || 'Non spécifié',
-                section: course.section || 'Non spécifié',
-                grade: course.grade || 'Non spécifié',
-                teacher: course.users.find(user => user.role === 'teacher')?.username || 'Non spécifié',
-                students: course.users
-                    .filter(user => user.role === 'student')
-                    .map(student => ({
-                        username: student.userId?.username,
-                        email: student.userId?.email,
-                    })),
-            }));
+        const data = courses.map(course => ({
+            courseName: course.subject,
+            courseCode: course.courseCode,
+            highschool: course.highschool || 'Non spécifié',
+            section: course.section || 'Non spécifié',
+            grade: course.grade || 'Non spécifié',
+            teacher: course.users.find(user => user.role === 'teacher')?.username || 'Non spécifié',
+            students: course.users
+                .filter(user => user.role === 'student')
+                .map(student => ({
+                    username: student.userId?.username,
+                    email: student.userId?.email,
+                })),
+        }));
 
-            res.status(200).json({ data });
-        } catch (error) {
-            console.error('Failed to fetch students:', error);
-            res.status(500).json({ message: 'Failed to fetch students.' });
-        }
+        res.status(200).json({ data });
+    } catch (error) {
+        console.error('Failed to fetch students:', error);
+        res.status(500).json({ message: 'Failed to fetch students.' });
     }
-);
+});
 
 
 // Fetch Joined Groupe d'Étude Courses
