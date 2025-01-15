@@ -31,7 +31,6 @@ router.post('/add', verifyToken, async (req, res) => {
         console.error('Missing required fields for Classe de Lycée:', { subject, grade, highschool, section });
         return res.status(400).json({ message: 'All required fields must be filled for Classe de Lycée.' });
     }
-
     if (price !== undefined && price < 0) {
         return res.status(400).json({ message: 'Price cannot be negative.' });
     }
