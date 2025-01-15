@@ -25,7 +25,7 @@ app.options('*', (req, res) => {
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     res.sendStatus(204); // No Content
 });
-
+app.use(cors({ origin: 'https://talelacademy.onrender.com' }));
 // Middleware
 app.use(bodyParser.json());
 
