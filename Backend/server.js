@@ -12,13 +12,13 @@ connectDB();
 
 // CORS Configuration
 app.use(cors({
-    origin: 'https://talacademy.onrender.com',
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // Include OPTIONS
-    allowedHeaders: ['Content-Type', 'Authorization'], // Explicitly include headers
-    credentials: true // Include credentials if needed
+    origin: 'https://talacademy.onrender.com', // Replace with your frontend URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // Enable for cookies/auth headers
 }));
 
-// Handle Preflight Requests explicitly
+// Handle Preflight Requests explicitly (Optional if above is used)
 app.options('*', (req, res) => {
     res.header('Access-Control-Allow-Origin', 'https://talacademy.onrender.com');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
@@ -34,7 +34,7 @@ app.use('/api/auth', require('./routes/auth'));
 app.use('/api/course', require('./routes/course'));
 
 // Static File Uploads with CORS
-app.use('/uploads', cors(), express.static(path.join(__dirname, 'uploads'), {
+app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
     setHeaders: (res, path) => {
         if (path.endsWith('.pdf')) {
             res.setHeader('Content-Disposition', 'inline'); // View in browser
@@ -46,12 +46,6 @@ app.use('/uploads', cors(), express.static(path.join(__dirname, 'uploads'), {
 // Root Route
 app.get('/', (req, res) => {
     res.send('Backend is running!');
-});
-
-// Start the Server
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
 });
 
 // AWS S3 configuration
@@ -74,4 +68,17 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
     res.setHeader('Cache-Control', 'no-store');
     next();
+});
+
+// Global Error Handler (to ensure all responses include headers)
+app.use((err, req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'https://talacademy.onrender.com');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.status(err.status || 500).json({ error: err.message });
+});
+
+// Start the Server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
