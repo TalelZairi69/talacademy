@@ -8,7 +8,7 @@
 /* Global cursor for the entire page */
 /* Apply the same cursor globally */
 * {
-    cursor: url('/FrontEnd/img/navigate.png'), auto;
+    cursor: url('/img/navigate.png'), auto;
 }
 
 .btn {

@@ -241,11 +241,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const courseCard = document.createElement('div');
                         courseCard.classList.add('course-card');
                         courseCard.onclick = () => {
-                            window.location.href = `/FrontEnd/dashboard/courses/course-details.html?code=${course.courseCode}`;
+                            window.location.href = `/dashboard/courses/course-details.html?code=${course.courseCode}`;
 
                         };
                         
-                        console.log(`Redirecting to: /FrontEnd/dashboard/courses/${course.courseCode}`);
+                        console.log(`Redirecting to: /dashboard/courses/${course.courseCode}`);
 
                         
     
@@ -389,7 +389,7 @@ async function fetchStudyGroups() {
                     const groupCard = document.createElement('div');
                     groupCard.classList.add('course-card');
                     groupCard.onclick = () => {
-                        window.location.href = `/FrontEnd/dashboard/courses/course-details.html?code=${group.courseCode}`;
+                        window.location.href = `/dashboard/courses/course-details.html?code=${group.courseCode}`;
                     };
 
                     const imageUrl = images[group.subject] || images.default;
@@ -434,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
 document.querySelectorAll('.course-card').forEach(card => {
     card.addEventListener('click', (e) => {
         const courseCode = card.querySelector('.course-code').textContent;
-        window.location.href = `/FrontEnd/dashboard/courses/course-details.html?code=${courseCode}`;
+        window.location.href = `/dashboard/courses/course-details.html?code=${courseCode}`;
     });
 });
 

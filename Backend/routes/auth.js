@@ -101,7 +101,7 @@ router.get('/dashboard', verifyToken, async (req, res) => {
 
         const profilePicture = user.profilePicture && user.profilePicture.data
             ? `data:${user.profilePicture.contentType};base64,${user.profilePicture.data.toString('base64')}`
-            : '/FrontEnd/img/default-profile.png'; // Default image if none exists
+            : '/img/default-profile.png'; // Default image if none exists
 
             res.status(200).json({
                 username: user.username,
