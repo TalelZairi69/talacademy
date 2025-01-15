@@ -11,8 +11,6 @@ const { Upload } = require('@aws-sdk/lib-storage');
 const multerS3 = require('multer-s3');
 const mime = require('mime-types');
 const Busboy = require('busboy');
-const cors = require('cors');
-
 
 // Add Course Route
 router.post('/add', verifyToken, async (req, res) => {
@@ -139,6 +137,7 @@ router.get('/my-courses', verifyToken, async (req, res) => {
 });
 
 
+// Fetch Students in Teacher's Class
 router.get('/students', verifyToken, async (req, res) => {
     try {
         const courses = await Course.find({ 'users.userId': req.user.id, 'users.role': 'teacher' })
@@ -165,7 +164,6 @@ router.get('/students', verifyToken, async (req, res) => {
         res.status(500).json({ message: 'Failed to fetch students.' });
     }
 });
-
 
 // Fetch Joined Groupe d'Étude Courses
 router.get('/my-study-groups', verifyToken, async (req, res) => {
