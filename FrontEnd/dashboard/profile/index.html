@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil</title>
+    <link href="/img/icon.png" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f4f9;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            background: #2c3e50;
+            color: #ffffff;
+            width: 280px;
+            padding: 20px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            height: 100vh;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 3px solid #ffffff;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar h4 {
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .sidebar a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 10px 0;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+        }
+
+        .sidebar a:hover {
+            background: #34495e;
+            color: #ecf0f1;
+        }
+
+        .sidebar a.active {
+            background: #3498db;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            width: calc(100% - 280px);
+            overflow-y: auto;
+        }
+
+        .profile-card {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-card h4 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .profile-card form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .form-group input {
+            background: #ffffff;
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+        }
+
+        .form-group input[type="file"] {
+            padding: 5px;
+        }
+
+        .form-group input:focus {
+            border-color: #3498db;
+            box-shadow: none;
+        }
+
+        .btn {
+            background: #3498db;
+            color: #ffffff;
+            border: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .profile-picture {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .profile-picture img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-right: 15px;
+            border: 3px solid #ddd;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification {
+            display: none;
+            padding: 10px;
+            background-color: #3498db;
+            color: white;
+            text-align: center;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(-20px);
+            animation: fadeInFromTop 1s ease-in-out forwards;
+        }
+
+        @keyframes fadeInFromTop {
+            0% {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <img id="profile-img" src="/img/studentboy.png" alt="Profile Picture" />
+            <a href="/dashboard/profile" class="active"><i class="bi bi-person-fill"></i> Mon Profil</a>
+            <a href="/dashboard/courses"><i class="bi bi-file-earmark-text-fill"></i> Mes Cours</a>
+            <a href="/dashboard/students"><i class="bi bi-people-fill"></i> Mes Étudiants</a>
+            <a href="/dashboard/assignments"><i class="bi bi-clipboard-data"></i> Assignments</a>
+            <a href="/dashboard/grades"><i class="bi bi-bar-chart-fill"></i> Grades</a>
+            <a href="/dashboard/resources"><i class="bi bi-folder-fill"></i> Resources</a>
+            <a href="/dashboard/announcements"><i class="bi bi-megaphone-fill"></i> Announcements</a>
+            <a href="/dashboard/settings"><i class="bi bi-gear-fill"></i> Settings</a>
+            <a href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a>
+        </div>
+        <div class="main-content fade-in">
+            <div class="profile-card fade-in">
+                <h4>Modifier Mon Profil</h4>
+                <form id="profile-form">
+                    <div class="form-group">
+                        <label for="username">Nom d'utilisateur</label>
+                        <input type="text" id="username" value="JohnDoe" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" value="johndoe@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Numéro de Téléphone (optionnel)</label>
+                        <input type="text" id="phone" placeholder="Entrez votre numéro">
+                    </div>
+                    <button type="submit" class="btn">Enregistrer les Modifications</button>
+                </form>
+            </div>
+            <div id="notification" class="notification"></div>
+        </div>
+    </div>
+
+    <script>
+        function showNotification(message, isError = false) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.backgroundColor = isError ? '#e74c3c' : '#3498db';
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                showNotification('Vous devez être connecté pour accéder à cette page.', true);
+                setTimeout(() => {
+                    window.location.href = '../../login/';
+                }, 2000);
+                return;
+            }
+
+            try {
+                const response = await fetch('https://talelacademybackend.onrender.com/api/auth/dashboard', {
+                    method: 'GET',
+                    headers: { Authorization: `Bearer ${token}` },
+                });
+
+                if (response.ok) {
+                    const user = await response.json();
+
+                    document.getElementById('username').value = user.username;
+                    document.getElementById('email').value = user.email;
+
+                    if (user.profilePicture) {
+                        document.getElementById('profile-img-main').src = user.profilePicture;
+                        document.querySelector('.sidebar img').src = user.profilePicture;
+                    } else {
+                        document.getElementById('profile-img-main').src = '/img/default-profile.png';
+                        document.querySelector('.sidebar img').src = '/img/default-profile.png';
+                    }
+                } else {
+                    showNotification('Impossible de charger les données du profil.', true);
+                }
+            } catch (error) {
+                console.error('Error loading profile data:', error);
+                showNotification('Une erreur est survenue. Veuillez réessayer.', true);
+            }
+        });
+
+        document.getElementById('profile-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const profileImageInput = document.getElementById('profile-image-input').files[0];
+            const token = localStorage.getItem('token');
+
+            const formData = new FormData();
+            formData.append('username', username);
+            formData.append('email', email);
+            formData.append('phone', phone);
+            if (profileImageInput) {
+                formData.append('profilePicture', profileImageInput);
+            }
+
+            try {
+                const response = await fetch('https://talelacademybackend.onrender.com/api/auth/update-profile', {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    showNotification('Profil mis à jour avec succès.');
+
+                    if (result.user.profilePicture) {
+                        document.getElementById('profile-img-main').src = result.user.profilePicture;
+                        document.querySelector('.sidebar img').src = result.user.profilePicture;
+                    }
+                } else {
+                    showNotification(`Erreur : ${result.message}`, true);
+                }
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                showNotification('Impossible de mettre à jour le profil. Veuillez réessayer plus tard.', true);
+            }
+        });
+    </script>
+    <script src="/js/dashboard.js"></script>
+</body>
+
+</html>

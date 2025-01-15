@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher dashboard</title>
+    <link href="/img/icon.png" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/FrontEnd/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/FrontEnd/dashboard/courses/course-details.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+            <img src="/FrontEnd/img/studentboy.png" />
+            <a href="/FrontEnd/dashboard/profile"><i class="bi bi-chat-dots-fill"></i> Mon Profil</a>
+            <a href="/FrontEnd/dashboard/courses" class="active"><i class="bi bi-file-earmark-text-fill"></i> Mes Cours</a>
+            <a href="/FrontEnd/dashboard/students"><i class="bi bi-people-fill"></i> Mes Étudiants</a>
+            <a href="/FrontEnd/dashboard/assignments"><i class="bi bi-clipboard-data"></i> Assignments</a>
+            <a href="/FrontEnd/dashboard/grades"><i class="bi bi-bar-chart-fill"></i> Grades</a>
+            <a href="/FrontEnd/dashboard/resources"><i class="bi bi-folder-fill"></i> Resources</a>
+            <a href="/FrontEnd/dashboard/announcements"><i class="bi bi-megaphone-fill"></i> Announcements</a>
+            <a href="/FrontEnd/dashboard/settings"><i class="bi bi-gear-fill"></i> Settings</a>
+            <a href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a>
+        </div>
+
+        <div class="main-content">
+            <div class="card left-card">
+                <h3>Course Details</h3>
+                <p><strong>Code du Cours:</strong> <span id="course-code"></span></p>
+                <p><strong>Professeur:</strong> <span id="course-teacher"></span></p>
+                <p><strong>Matière:</strong> <span id="course-subject"></span></p>
+                <p><strong>Lycée:</strong> <span id="course-highschool"></span></p>
+                <p><strong>Niveau:</strong> <span id="course-grade"></span></p>
+                <p><strong>Section:</strong> <span id="course-section"></span></p>
+                <p><strong>Groupe:</strong> <span id="course-group"></span></p>
+                <div id="upload-section" class="card upload-section" style="display:none;">
+                    <h3>Upload Document</h3>
+                    <form id="upload-form">
+                        <div class="mb-3">
+                            <label for="document-title">Title</label>
+                            <input type="text" class="form-control" id="document-title" placeholder="Chapitre 1.." required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="document-type">Type</label>
+                            <select class="form-control" id="document-type" required>
+                                <option value="" selected hidden>Select Type</option>
+                                <option value="cours">Cours</option>
+                                <option value="examens">Examens</option>
+                                <option value="notes">Notes</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="document-file">File</label>
+                            <input type="file" class="form-control" id="document-file" required>
+                        </div>
+                        <progress id="upload-progress" value="0" max="100" style="width: 100%; display: none;"></progress>
+                        <button type="submit" class="btn">Upload</button>
+                    </form>
+                </div>
+                
+            </div>
+
+            <div class="right-content">
+                <div class="card">
+                    <ul class="nav nav-tabs" id="course-tabs">
+                        <li class="nav-item">
+                            <a class="nav-link active" data-tab="cours" href="#">Cours</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-tab="examens" href="#">Examens</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-tab="notes" href="#">Notes</a>
+                        </li>
+                    </ul>
+                    <div id="tab-content">
+                        <div class="tab-pane active" id="cours-section">
+                            <p>Course content will be displayed here.</p>
+                        </div>
+                        <div class="tab-pane" id="examens-section" style="display:none;">
+                            <p>Exam content will be displayed here.</p>
+                        </div>
+                        <div class="tab-pane" id="notes-section" style="display:none;">
+                            <p>Notes content will be displayed here.</p>
+                        </div>
+                    </div>
+                </div>
+              
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const courseCode = urlParams.get('code');
+    const token = localStorage.getItem('token');
+
+    try {
+        const courseResponse = await fetch(`http://localhost:5000/api/course/${courseCode}`, {
+            method: 'GET',
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (courseResponse.ok) {
+            const course = await courseResponse.json();
+            console.log('Fetched Course Details:', course);
+
+            // Check existence of each element before updating
+            const courseCodeElem = document.getElementById('course-code');
+            if (courseCodeElem) courseCodeElem.textContent = courseCode;
+
+            const teacherElem = document.getElementById('course-teacher');
+            if (teacherElem) teacherElem.textContent = course.teacher;
+
+            const subjectElem = document.getElementById('course-subject');
+            if (subjectElem) subjectElem.textContent = course.subject;
+
+            const highschoolElem = document.getElementById('course-highschool');
+            if (highschoolElem) highschoolElem.textContent = course.highschool;
+
+            const gradeElem = document.getElementById('course-grade');
+            if (gradeElem) gradeElem.textContent = course.grade;
+
+            const sectionElem = document.getElementById('course-section');
+            if (sectionElem) sectionElem.textContent = course.section;
+
+            const groupElem = document.getElementById('course-group');
+            if (groupElem) groupElem.textContent = course.group;
+
+            // Populate course students
+            const studentsList = document.getElementById('course-students');
+            if (studentsList) {
+                studentsList.innerHTML = '';
+                if (course.students && Array.isArray(course.students)) {
+                    course.students.forEach((student) => {
+                        const li = document.createElement('li');
+                        li.textContent = student.username;
+                        studentsList.appendChild(li);
+                    });
+                } else {
+                    const noStudents = document.createElement('li');
+                    noStudents.textContent = 'No students enrolled yet.';
+                    studentsList.appendChild(noStudents);
+                }
+            }
+
+            // Populate course content
+            const coursSection = document.getElementById('cours-section');
+            const examensSection = document.getElementById('examens-section');
+            const notesSection = document.getElementById('notes-section');
+
+            if (coursSection) coursSection.innerHTML = '';
+            if (examensSection) examensSection.innerHTML = '';
+            if (notesSection) notesSection.innerHTML = '';
+
+            if (course.content && Array.isArray(course.content)) {
+                course.content.forEach((doc) => {
+    const fileType = doc.url.split('.').pop().toLowerCase(); // Ensure lowercase extension
+
+    let contentHTML = `<li style="margin-bottom: 20px;">
+        <div class="document-title">${doc.title}</div>`;
+
+    if (['jpg', 'jpeg', 'png', 'gif', 'bmp'].includes(fileType)) {
+        contentHTML += `
+            <img src="${doc.url}" alt="${doc.title}" style="width: 50%; height: auto; display: block; margin: 10px auto; border: 1px solid #ddd; border-radius: 5px;" />
+        `;
+    } else if (fileType === 'mp4') {
+        contentHTML += `
+            <video controls width="100%" style="margin-top: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                <source src="${doc.url}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>`;
+    } else if (fileType === 'pdf') {
+        contentHTML += `
+            <iframe src="${doc.url}" width="100%" height="400px" style="margin-top: 10px; border: 1px solid #ddd; border-radius: 5px;"></iframe>`;
+    } else {
+        contentHTML += `
+            <a href="${doc.url}" target="_blank" style="font-weight: bold; color: #3498db;">View File</a>`;
+    }
+
+    contentHTML += `<br><a href="${doc.url}" download style="font-weight: bold; color: #3498db;">Download File</a></li>`;
+
+    if (doc.type === 'cours' && coursSection) {
+        coursSection.innerHTML += contentHTML;
+    } else if (doc.type === 'examens' && examensSection) {
+        examensSection.innerHTML += contentHTML;
+    } else if (doc.type === 'notes' && notesSection) {
+        notesSection.innerHTML += contentHTML;
+    }
+});
+} else {
+    if (coursSection) coursSection.innerHTML = '<p>No course content uploaded yet.</p>';
+    if (examensSection) examensSection.innerHTML = '<p>No exam content uploaded yet.</p>';
+    if (notesSection) notesSection.innerHTML = '<p>No notes uploaded yet.</p>';
+}
+        } else {
+            const error = await courseResponse.json();
+            console.error('Error fetching course:', error);
+            document.body.innerHTML = `<h1>${error.message}</h1>`;
+        }
+    } catch (error) {
+        console.error('Error fetching course:', error);
+        document.body.innerHTML = '<h1>Failed to load course details.</h1>';
+    }
+
+    try {
+        const userResponse = await fetch('http://localhost:5000/api/auth/dashboard', {
+            method: 'GET',
+            headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (userResponse.ok) {
+            const user = await userResponse.json();
+            console.log('User details:', user);
+            const uploadSection = document.getElementById('upload-section');
+            if (uploadSection && user.role === 'teacher') {
+                uploadSection.style.display = 'block';
+            }
+        } else {
+            console.error('Failed to fetch user details.');
+        }
+    } catch (error) {
+        console.error('Error checking user role:', error);
+    }
+
+    const uploadForm = document.getElementById('upload-form');
+const progressBar = document.getElementById('upload-progress');
+
+if (uploadForm) {
+    uploadForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const file = document.getElementById('document-file').files[0];
+        const title = document.getElementById('document-title').value;
+        const type = document.getElementById('document-type').value;
+
+        if (!file || !title || !type) {
+            alert('Please fill out all fields and select a file.');
+            return;
+        }
+
+        progressBar.style.display = 'block';
+        progressBar.value = 0;
+
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('type', type);
+        formData.append('file', file);
+
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', `http://localhost:5000/api/course/${courseCode}/upload`, true);
+        xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+
+        xhr.upload.addEventListener('progress', (event) => {
+            if (event.lengthComputable) {
+                const percentComplete = Math.round((event.loaded / event.total) * 100);
+                progressBar.value = percentComplete;
+                console.log(`Progress: ${percentComplete}%`);
+            }
+        });
+
+        xhr.onload = () => {
+            if (xhr.status === 201) {
+                console.log('Upload Success:', JSON.parse(xhr.responseText));
+                alert('File uploaded successfully!');
+                location.reload();
+            } else {
+                console.error('Upload Failed:', xhr.responseText);
+                alert('File upload failed.');
+            }
+            progressBar.style.display = 'none';
+        };
+
+        xhr.onerror = () => {
+            console.error('Upload Error');
+            alert('An error occurred while uploading the file.');
+            progressBar.style.display = 'none';
+        };
+
+        xhr.send(formData);
+    });
+
+}
+
+    const tabs = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('.tab-pane');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = tab.getAttribute('data-tab');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            sections.forEach(section => {
+                if (section.id === `${target}-section`) {
+                    section.style.display = 'block';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        });
+    });
+});
+
+    </script>
+    
+</body>
+</html>

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-image: url('/img/bg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .signup-container {
+            width: 90%;
+            max-width: 700px;
+            background: rgba(255, 255, 255, 0.9); /* Semi-transparent background */
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            margin-top: 50px;
+            opacity: 0;
+            transform: translateY(-30px);
+            animation: fadeInDrop 0.8s ease forwards;
+        }
+
+        .logo img {
+            height: 180px;
+            opacity: 0;
+            transform: translateY(-30px);
+            animation: fadeInDrop 0.8s ease forwards;
+            animation-delay: 0.2s;
+        }
+
+        .title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin: 20px 0 10px;
+            opacity: 0;
+            transform: translateY(-30px);
+            animation: fadeInDrop 0.8s ease forwards;
+            animation-delay: 0.4s;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            color: #777;
+            margin-bottom: 30px;
+            opacity: 0;
+            transform: translateY(-30px);
+            animation: fadeInDrop 0.8s ease forwards;
+            animation-delay: 0.6s;
+        }
+
+        .account-selection {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(-30px);
+            animation: fadeInDrop 0.8s ease forwards;
+            animation-delay: 0.8s;
+        }
+
+        .account-type {
+            background-color: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            width: 150px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.5s ease;
+            cursor: pointer;
+            opacity: 1;
+        }
+
+        .account-type:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .account-type.fading {
+            opacity: 0;
+        }
+
+        .account-type img {
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        .account-type p {
+            margin: 0;
+            font-size: 1rem;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-container {
+            margin-top: 30px;
+            text-align: right;
+            display: none;
+            opacity: 0;
+            transform: translateY(-30px);
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+        }
+
+        .form-container.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes fadeInDrop {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+     .gender-selection {
+    display: flex;
+    justify-content: space-between;
+    gap: -10px; /* Reduce the spacing between gender options */
+    padding: 10px 0;
+}
+
+.gender-option {
+    cursor: pointer;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    padding: 10px;
+    border: 2px solid #e0e0e0; /* Add a border for the box */
+    border-radius: 10px;
+    width: 100px; /* Set a fixed width for the boxes */
+    background-color: #fff; /* Add a background color */
+}
+
+.gender-option:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.gender-option.selected {
+    border-color: #007bff;
+    background-color: rgba(0, 123, 255, 0.1); /* Highlight background when selected */
+}
+
+.gender-icon {
+    height: 50px; /* Adjust icon size */
+    margin-bottom: 5px;
+}
+        .signin-link {
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+
+        .signin-link a {
+            text-decoration: none;
+            color: #007bff;
+            transition: color 0.3s;
+        }
+
+        .signin-link a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="signup-container">
+        <div class="logo">
+            <img src="/img/Logotype_du_ministère_de_l'éducation_Tunisie.png" alt="Logo">
+        </div>
+        <div class="title">إنشاء حساب</div>
+        <div class="description">لديك الخيار بين حساب   تلميذ ، أستاذ أو  ولي.</div>
+
+        <div class="account-selection">
+            <div class="account-type" data-role="student">
+                <img src="/img/studentico.png" alt="Student">
+                <p>تلميذ</p>
+            </div>
+            
+            <div class="account-type" data-role="teacher">
+                <img src="/img/teacherico.png" alt="Teacher">
+                <p>أستاذ</p>
+            </div>
+            <div class="account-type" data-role="parent">
+                <img src="/img/parentico.png" alt="Parent">
+                <p>ولي</p>
+            </div>
+        </div>
+
+        <div id="signup-form-container" class="form-container">
+            <h4 id="form-title" class="mb-3">نموذج التسجيل</h4>
+            <form id="signup-form">
+                <div class="mb-3 form-element">
+                    <label class="form-label"></label>
+                    <div class="gender-selection d-flex justify-content-around">
+                        <div class="gender-option" data-gender="Male">
+                            <img src="/img/manlogo.svg" alt="Male Icon" class="gender-icon">
+                            <p>.Mr </p>
+                        </div>
+                        <div class="gender-option" data-gender="Female">
+                            <img src="/img/womanlogo.svg" alt="Female Icon" class="gender-icon">
+                            <p>.Mrs </p>
+                        </div>
+                    </div>
+                    <input type="hidden" id="gender" name="gender" required>
+                </div>
+                
+                
+                <div class="mb-3 form-element">
+                    <label for="username" class="form-label">الاسم واللقب</label>
+                    <input type="text" class="form-control" id="username" name="username" required>
+                </div>
+                <div class="mb-3 form-element">
+                    <label for="email" class="form-label">البريد الإلكتروني</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3 form-element">
+                    <label for="phone" class="form-label">رقم الهاتف</label>
+                    <input type="tel" class="form-control" id="phone" name="phone" pattern="[0-9]{8,15}" required>
+                </div>
+                
+                <div class="mb-3 form-element">
+                    <label for="password" class="form-label">كلمة المرور</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                <div class="mb-3 form-element" id="invitation-code-field" style="display: none;">
+                    <label for="invitation-code" class="form-label">رمز الدعوة (للمعلمين فقط)</label>
+                    <input type="text" class="form-control" id="invitation-code" name="invitationCode">
+                </div>
+                <button type="submit" class="btn btn-primary form-element">تسجيل الدخول</button>
+            </form>
+        </div>
+
+        <div class="signin-link">
+            <p>هل لديك حساب؟ <a href="/Login/">تسجيل الدخول</a></p>
+        </div>
+    </div>
+
+    <script>
+        const accountTypes = document.querySelectorAll('.account-type');
+        const formContainer = document.getElementById('signup-form-container');
+        const invitationCodeField = document.getElementById('invitation-code-field');
+        const formTitle = document.getElementById('form-title');
+
+        accountTypes.forEach(accountType => {
+            accountType.addEventListener('click', () => {
+                accountTypes.forEach(type => {
+                    if (type !== accountType) {
+                        type.classList.add('fading');
+                        setTimeout(() => type.classList.remove('fading'), 500);
+                    }
+                });
+
+                const role = accountType.getAttribute('data-role');
+
+                // Toggle form visibility
+                if (formContainer.classList.contains('active') && formTitle.dataset.role === role) {
+                    formContainer.classList.remove('active');
+                    formTitle.dataset.role = '';
+                } else {
+                    formContainer.classList.add('active');
+                    formTitle.dataset.role = role;
+                }
+
+                // Adjust invitation code field and title
+                if (role === 'teacher') {
+                    invitationCodeField.style.display = 'block';
+                    formTitle.textContent = "نموذج التسجيل للمعلمين";
+                } else if (role === 'parent') {
+                    invitationCodeField.style.display = 'none';
+                    formTitle.textContent = "نموذج التسجيل للأولياء";
+                } else {
+                    invitationCodeField.style.display = 'none';
+                    formTitle.textContent = "نموذج التسجيل للتلاميذ";
+                }
+
+                document.getElementById('signup-form').dataset.role = role;
+            });
+        });
+
+        document.getElementById('signup-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const phone = document.getElementById('phone').value; // Add phone here
+    const role = e.target.dataset.role;
+    const gender = document.getElementById('gender').value;
+    const invitationCode = document.getElementById('invitation-code').value;
+
+    console.log({ username, email, password, phone, role, gender, invitationCode }); // Debug payload
+
+    try {
+        const response = await fetch('http://localhost:5000/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, email, password, phone, role, gender, invitationCode }), // Include phone
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+
+            // Automatically log the user in
+            const loginResponse = await fetch('http://localhost:5000/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password }),
+            });
+
+            if (loginResponse.ok) {
+                const loginData = await loginResponse.json();
+                localStorage.setItem('token', loginData.token);
+                window.location.href = '../dashboard/';
+            }
+        } else {
+            const error = await response.json();
+            alert(error.message);
+        }
+    } catch (error) {
+        alert('حدث خطأ. يرجى المحاولة مرة أخرى.');
+    }
+});
+
+        document.querySelectorAll('.gender-option').forEach(option => {
+    option.addEventListener('click', () => {
+        // Remove 'selected' class from all options
+        document.querySelectorAll('.gender-option').forEach(opt => opt.classList.remove('selected'));
+        
+        // Add 'selected' class to clicked option
+        option.classList.add('selected');
+        
+        // Set the value of the hidden input field
+        document.getElementById('gender').value = option.getAttribute('data-gender');
+    });
+});
+
+    </script>
+</body>
+</html>

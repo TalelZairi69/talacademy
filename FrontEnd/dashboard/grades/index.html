@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mes Étudiants</title>
+    <link href="../img/icon.png" rel="icon">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="/FrontEnd/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-color: #f4f4f9;
+            color: #333;
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .dashboard-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .fade-in {
+    opacity: 0;
+    transform: translateY(-20px);
+    animation: fadeInFromTop 1s ease-in-out forwards;
+}
+
+/* Add keyframes for fade-in animation */
+@keyframes fadeInFromTop {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.sidebar {
+            background: #2c3e50;
+            color: #ffffff;
+            width: 280px;
+            padding: 20px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: fixed;
+            height: 100vh;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        .sidebar img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-bottom: 15px;
+            border: 3px solid #ffffff;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .sidebar h4 {
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .sidebar a {
+            color: #ffffff;
+            text-decoration: none;
+            margin: 10px 0;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar a i {
+            margin-right: 10px;
+        }
+
+        .sidebar a:hover {
+            background: #34495e;
+            color: #ecf0f1;
+        }
+
+        .sidebar a.active {
+            background: #3498db;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+
+        .main-content {
+            margin-left: 280px;
+            padding: 30px;
+            width: calc(100% - 280px);
+            overflow-y: auto;
+        }
+
+        .course-card {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-card:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .student-list {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+        }
+
+        .student-list li {
+            padding: 10px;
+            background-color: #ecf0f1;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .notification {
+            display: none;
+            padding: 10px;
+            color: white;
+            text-align: center;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <div class="sidebar">
+
+            <img src="/FrontEnd/img/studentboy.png" />
+            <a href="/FrontEnd/dashboard/profile" ><i class="bi bi-person-fill"></i> Mon Profil</a>
+            <a href="/FrontEnd/dashboard/courses" ><i class="bi bi-file-earmark-text-fill"></i> Mes Cours</a>
+            <a href="/FrontEnd/dashboard/students"><i class="bi bi-people-fill"></i> Mes Étudiants</a>
+            <a href="/FrontEnd/dashboard/assignments"><i class="bi bi-clipboard-data"></i> Assignments</a>
+            <a href="/FrontEnd/dashboard/grades" class="active"><i class="bi bi-bar-chart-fill"></i> Grades</a>
+            <a href="/FrontEnd/dashboard/resources"><i class="bi bi-folder-fill"></i> Resources</a>
+            <a href="/FrontEnd/dashboard/announcements"><i class="bi bi-megaphone-fill"></i> Announcements</a>
+            <a href="/FrontEnd/dashboard/settings"><i class="bi bi-gear-fill"></i> Settings</a>
+            <a href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a>
+
+        </div>
+        <div class="main-content fade-in">
+            <h3>Mes Étudiants</h3>
+            <div id="courses-container">
+                <!-- Courses and students will be dynamically loaded here -->
+            </div>
+            <div id="notification" class="notification"></div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const coursesContainer = document.getElementById('courses-container');
+            const notification = document.getElementById('notification');
+            const token = localStorage.getItem('token');
+
+            if (!token) {
+                displayNotification('Vous devez être connecté pour accéder à cette page.', true);
+                window.location.href = '../../login/';
+                return;
+            }
+
+            try {
+                const response = await fetch('https://talelacademybackend.onrender.com/api/course/students', {
+                    method: 'GET',
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (response.ok) {
+                    const { data } = await response.json();
+                    if (data.length === 0) {
+                        coursesContainer.innerHTML = '<p>Aucun cours trouvé.</p>';
+                    } else {
+                        data.forEach(course => {
+                            const courseCard = document.createElement('div');
+                            courseCard.className = 'course-card';
+
+                            courseCard.innerHTML = `
+                                <h4>${course.courseName} (${course.courseCode})</h4>
+                                <p><strong>Lycée:</strong> ${course.highschool}</p>
+                                <p><strong>Niveau:</strong> ${course.grade}</p>
+                                <ul class="student-list">
+                                    ${course.students.map(student => `
+                                        <li>
+                                            <span>${student.username}</span>
+                                            <span>${student.email}</span>
+                                        </li>
+                                    `).join('') || '<li>Aucun étudiant inscrit.</li>'}
+                                </ul>
+                            `;
+                            coursesContainer.appendChild(courseCard);
+                        });
+                    }
+                } else {
+                    displayNotification('Impossible de récupérer les étudiants.', true);
+                }
+            } catch (error) {
+                displayNotification('Une erreur est survenue. Veuillez réessayer.', true);
+            }
+
+            function displayNotification(message, isError = false) {
+                notification.textContent = message;
+                notification.style.backgroundColor = isError ? '#e74c3c' : '#3498db';
+                notification.style.display = 'block';
+                setTimeout(() => notification.style.display = 'none', 3000);
+            }
+        });
+        
+    </script>
+    <script src="/FrontEnd/js/dashboard.js"></script>
+</body>
+
+</html>

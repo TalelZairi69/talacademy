@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher dashboard</title>
+    <link href="/img/icon.png" rel="icon">
+
+    <!-- Google Web Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="/FrontEnd//css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/FrontEnd/dashboard/courses/style.css">
+</head>
+
+<body>
+    <div id="notification-bar"></div>
+    <div class="dashboard-container">
+        <div class="sidebar">
+
+            <img src="/FrontEnd//img/studentboy.png" />
+            <a href="/FrontEnd/dashboard/profile"><i class="bi bi-person-fill"></i> Mon Profil</a>
+            <a href="/FrontEnd/dashboard/courses" class="active"><i class="bi bi-file-earmark-text-fill"></i> Mes Cours</a>
+            <a href="/FrontEnd/dashboard/students"><i class="bi bi-people-fill"></i> Mes Étudiants</a>
+            <a href="/FrontEnd/dashboard/assignments"><i class="bi bi-clipboard-data"></i> Assignments</a>
+            <a href="/FrontEnd/dashboard/grades"><i class="bi bi-bar-chart-fill"></i> Grades</a>
+            <a href="/FrontEnd/dashboard/resources"><i class="bi bi-folder-fill"></i> Resources</a>
+            <a href="/FrontEnd/dashboard/announcements"><i class="bi bi-megaphone-fill"></i> Announcements</a>
+            <a href="/FrontEnd/dashboard/settings"><i class="bi bi-gear-fill"></i> Settings</a>
+            <a href="#" onclick="logout()"><i class="bi bi-box-arrow-right"></i> </a>
+
+        </div>
+        
+        
+
+        <div class="main-content">
+            <div class="card fade-in" style="animation-delay: 0.4s;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <h3>Bienvenue, <span id="username-welcome"></span>!</h3>
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        
+                        <p id="balance-display" style="margin: 0; font-size: 1.2rem; color: #555;"></p>
+                    </div>
+                </div>
+            </div>
+            
+            
+            <div class="card fade-in" id="add-course-section" style="animation-delay: 0.6s;">
+                <button id="show-add-course" class="btn">Ajouter un cours</button>
+                <form id="add-course-form" style="display: none; margin-top: 20px;">
+                    <h4>Ajouter un Nouveau Cours</h4>
+            
+                    <!-- Course Type Dropdown -->
+                    <div class="mb-3">
+                        <label for="course-type">Type de Cours</label>
+                        <select class="form-control" id="course-type" name="course-type" required>
+                            <option value="" selected hidden>Choisir le type de cours</option>
+                            <option value="classe_de_lycee">Cours Académique</option>
+                            <option value="groupe_d_etude">Cours Particuliers</option>
+                        </select>
+                    </div>
+            
+                    <!-- Classe de Lycée Fields -->
+                    <div id="classe-de-lycee-fields">
+                        <div class="mb-3">
+                            <label for="subject">Matière</label>
+                            <select class="form-control" id="subject" name="subject" required>
+                                <option value="" selected hidden>Choisir une matière</option>
+                                <option value="Mathématiques">Mathématiques</option>
+                                <option value="Physique">Physique</option>
+                                <option value="Sciences Naturelles">Sciences Naturelles</option>
+                                <option value="Informatique">Informatique</option>
+                                <option value="Technologie">Technologie</option>
+                                <option value="Français">Français</option>
+                                <option value="Anglais">Anglais</option>
+                                <option value="Arabe">Arabe</option>
+                                <option value="Histoire">Histoire</option>
+                                <option value="Géographie">Géographie</option>
+                                <option value="Philosophie">Philosophie</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="highschool">Lycée</label>
+                            <select class="form-control" id="highschool" name="highschool" required>
+                                <option value="" selected hidden>Choisir un lycée</option>
+                                <option value="Lycée Said Boubaker Moknine">Lycée Said Boubaker Moknine</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="grade">Niveau</label>
+                            <select id="grade" class="form-control" name="grade" required>
+                                <option value="" selected hidden>Choisir le niveau</option>
+                                <option value="1ère Année">1ère Année</option>
+                                <option value="2ème Année">2ème Année</option>
+                                <option value="3ème Année">3ème Année</option>
+                                <option value="Baccalauréat">Baccalauréat</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="section">Section</label>
+                            <select id="section" class="form-control" name="section" required>
+                                <option value="" selected hidden>Choisir la section</option>
+                                <option value="Mathématiques">Mathématiques</option>
+                                <option value="Économie">Économie</option>
+                                <option value="Technique">Technique</option>
+                                <option value="Informatique">Informatique</option>
+                            </select>
+                        </div>
+                     
+                        
+                    </div>
+            
+                    <!-- Groupe d'Étude Fields -->
+                    <div id="groupe-d-etude-fields" style="display: none;">
+                        <div class="mb-3">
+                            <label for="study-subject">Matière</label>
+                            <select class="form-control" id="study-subject" name="study-subject" required>
+                                <option value="" selected hidden>Choisir une matière</option>
+                                <option value="Mathématiques">Mathématiques</option>
+                                <option value="Physique">Physique</option>
+                                <option value="Sciences Naturelles">Sciences Naturelles</option>
+                                <option value="Informatique">Informatique</option>
+                                <option value="Technologie">Technologie</option>
+                                <option value="Français">Français</option>
+                                <option value="Anglais">Anglais</option>
+                                <option value="Arabe">Arabe</option>
+                                <option value="Histoire">Histoire</option>
+                                <option value="Géographie">Géographie</option>
+                                <option value="Philosophie">Philosophie</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="study-grade">Niveau</label>
+                            <select class="form-control" id="study-grade" name="study-grade" required>
+                                <option value="" selected hidden>Choisir le niveau</option>
+                                <option value="1ère Année">1ère Année</option>
+                                <option value="2ème Année">2ème Année</option>
+                                <option value="3ème Année">3ème Année</option>
+                                <option value="Baccalauréat">Baccalauréat</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="study-section">Section</label>
+                            <select class="form-control" id="study-section" name="study-section" required>
+                                <option value="" selected hidden>Choisir la section</option>
+                                <option value="Mathématiques">Mathématiques</option>
+                                <option value="Économie">Économie</option>
+                                <option value="Lettres">Lettres</option>
+                                <option value="Sciences">Sciences</option>
+                                <option value="Informatique">Informatique</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="group">Groupe</label>
+                            <select class="form-control" id="group" name="group" required>
+                                <option value="" selected hidden>Choisir le groupe</option>
+                                <option value="A">Groupe A</option>
+                                <option value="B">Groupe B</option>
+                                <option value="C">Groupe C</option>
+                                <option value="D">Groupe D</option>
+                                <option value="E">Groupe E</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="price">Course Price</label>
+                            <input type="number" class="form-control" id="price" name="price" min="0" required>
+                        </div>
+                        
+                    </div>
+            
+                    <button type="submit" class="btn">Valider</button>
+                </form>
+            </div>
+            
+
+            <div class="card fade-in" id="join-course-section" style="animation-delay: 0.8s;">
+
+                <h4>Rejoindre un cours</h4>
+                <form id="join-course-form">
+                    <div class="mb-3">
+                        <label for="course-code">Code du Cours</label>
+                        <input type="text" class="form-control" id="course-code" placeholder="Saisissez le Code" required>
+                    </div>
+                    <button type="submit" class="btn">Rejoindre</button>
+                </form>
+            </div>
+            
+            <div class="card fade-in" style="animation-delay: 0.8s;">
+                <h4>Les Cours Gratuits</h4>
+                <div id="free-courses" class="joined-courses-container">
+            </div>
+            </div>
+            <div class="card fade-in" style="animation-delay: 1s;">
+                <h4>Mes Cours Académique</h4>
+                <div id="joined-courses-container" class="joined-courses-container">
+            </div>
+            </div>
+            
+            <div class="card fade-in" style="animation-delay: 1.2s; margin-top: 20px;">
+                <h4>Mes Cours Particuliers</h4>
+                <div id="study-groups-container" class="joined-courses-container"></div>
+                </div>
+            </div>
+    <script src="/FrontEnd/js/dashboard.js"></script>
+</body>
+
+</html>
