@@ -12,7 +12,7 @@ const multerS3 = require('multer-s3');
 const mime = require('mime-types');
 const Busboy = require('busboy');
 const cors = require('cors');
-// CORS Configuration
+
 
 // Add Course Route
 router.post('/add', verifyToken, async (req, res) => {
@@ -139,37 +139,38 @@ router.get('/my-courses', verifyToken, async (req, res) => {
 });
 
 
-// Fetch Students in Teacher's Class
-router.get('/students', verifyToken, (req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://talacademy.onrender.com');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    next();
-}, async (req, res) => {
-    try {
-        const courses = await Course.find({ 'users.userId': req.user.id, 'users.role': 'teacher' })
-            .populate('users.userId', 'username email');
-        const data = courses.map(course => ({
-            courseName: course.subject,
-            courseCode: course.courseCode,
-            highschool: course.highschool || 'Non spécifié',
-            section: course.section || 'Non spécifié',
-            grade: course.grade || 'Non spécifié',
-            teacher: course.users.find(user => user.role === 'teacher')?.username || 'Non spécifié',
-            students: course.users
-                .filter(user => user.role === 'student')
-                .map(student => ({
-                    username: student.userId?.username,
-                    email: student.userId?.email,
-                })),
-        }));
-        res.status(200).json({ data });
-    } catch (error) {
-        console.error('Failed to fetch students:', error);
-        res.status(500).json({ message: 'Failed to fetch students.' });
+router.get(
+    '/students',
+    cors(), // Apply CORS middleware to this route only
+    verifyToken,
+    async (req, res) => {
+        try {
+            const courses = await Course.find({ 'users.userId': req.user.id, 'users.role': 'teacher' })
+                .populate('users.userId', 'username email');
+
+            const data = courses.map(course => ({
+                courseName: course.subject,
+                courseCode: course.courseCode,
+                highschool: course.highschool || 'Non spécifié',
+                section: course.section || 'Non spécifié',
+                grade: course.grade || 'Non spécifié',
+                teacher: course.users.find(user => user.role === 'teacher')?.username || 'Non spécifié',
+                students: course.users
+                    .filter(user => user.role === 'student')
+                    .map(student => ({
+                        username: student.userId?.username,
+                        email: student.userId?.email,
+                    })),
+            }));
+
+            res.status(200).json({ data });
+        } catch (error) {
+            console.error('Failed to fetch students:', error);
+            res.status(500).json({ message: 'Failed to fetch students.' });
+        }
     }
-});
+);
+
 
 // Fetch Joined Groupe d'Étude Courses
 router.get('/my-study-groups', verifyToken, async (req, res) => {
