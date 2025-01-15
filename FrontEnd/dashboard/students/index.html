@@ -199,6 +199,7 @@
             }
 
             try {
+                console.log('Attempting to fetch course students...');
                 const response = await fetch('https://talelacademybackend.onrender.com/api/course/students', {
                     method: 'GET',
                     headers: {
@@ -208,6 +209,7 @@
 
                 if (response.ok) {
                     const { data } = await response.json();
+                    console.log('Fetched course data:', data);
                     if (data.length === 0) {
                         coursesContainer.innerHTML = '<p>Aucun cours trouvé.</p>';
                     } else {
@@ -233,9 +235,12 @@
                         });
                     }
                 } else {
+                    const errorDetails = await response.text();
+                    console.error('Error details:', errorDetails);
                     displayNotification('Impossible de récupérer les étudiants.', true);
                 }
             } catch (error) {
+                console.error('Fetch error:', error);
                 displayNotification('Une erreur est survenue. Veuillez réessayer.', true);
             }
 
