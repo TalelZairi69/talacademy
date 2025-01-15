@@ -313,7 +313,34 @@ if (uploadForm) {
         });
     });
 });
+function logout() {
+    // Clear the token from localStorage
+    localStorage.removeItem('token');
 
+    // Dynamically calculate the root URL and redirect to the signin page
+    const rootUrl = window.location.origin; // Gets "http://127.0.0.1:5500"
+    const signinPath = "/Login";
+    
+    const redirectUrl = rootUrl + signinPath;
+
+    // Optionally, send a logout request to the server (if needed)
+    fetch('https://talacademyback.onrender.com/api/auth/logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`, // Include token if required
+        },
+    })
+    .then(response => {
+        // Regardless of success or failure, redirect to the signin page
+        window.location.href = redirectUrl;
+    })
+    .catch(error => {
+        console.error('Error logging out:', error);
+        // Redirect to signin even if there's an error
+        window.location.href = redirectUrl;
+    });
+}
     </script>
     
 </body>

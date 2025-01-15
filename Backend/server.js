@@ -50,10 +50,10 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads'), {
 
 
 app.use(cors({
-    origin: ['http://127.0.0.1:5500', 'http://localhost:5500' ,'https://talacademy.onrender.com'], // Frontend origins
-    methods: ['GET', 'POST'],
-    credentials: true,
-}));
+    origin: 'https://talacademy.onrender.com',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true // If you need to include cookies
+  }));
 const { S3Client } = require('@aws-sdk/client-s3');
 
 
