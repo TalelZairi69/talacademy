@@ -11,7 +11,13 @@ const { Upload } = require('@aws-sdk/lib-storage');
 const multerS3 = require('multer-s3');
 const mime = require('mime-types');
 const Busboy = require('busboy');
-
+const cors = require('cors');
+router.use(cors({
+    origin: 'https://talacademy.onrender.com',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+}));
 // Add Course Route
 router.post('/add', verifyToken, async (req, res) => {
     const { subject, highschool, grade, type, section, group, price } = req.body;
