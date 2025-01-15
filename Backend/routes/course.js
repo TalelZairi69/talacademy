@@ -13,12 +13,6 @@ const mime = require('mime-types');
 const Busboy = require('busboy');
 const cors = require('cors');
 // CORS Configuration
-app.use(cors({
-    origin: 'https://talacademy.onrender.com', // Only allow your front-end domain
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
-    credentials: true,
-}));
 
 // Add Course Route
 router.post('/add', verifyToken, async (req, res) => {
