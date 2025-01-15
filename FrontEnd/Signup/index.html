@@ -324,7 +324,7 @@
             const data = await response.json();
 
             // Automatically log the user in
-            const loginResponse = await fetch('https://talacademyback.onrender.com/pi/auth/login', {
+            const loginResponse = await fetch('https://talacademyback.onrender.com/api/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
