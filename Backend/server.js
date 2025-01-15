@@ -9,10 +9,10 @@ const app = express();
 
 // Connect to MongoDB
 connectDB();
-
+//talel
 // Middleware
 app.use(cors());
-
+-
 
 app.use(bodyParser.json());
 
