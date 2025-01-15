@@ -1,23 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cors = require('cors');
+const cors = require("cors");
 const path = require('path'); // For handling file paths
 const connectDB = require('./config/db');
 require('dotenv').config();
 
 const app = express();
 
-// Connect to MongoDB
 connectDB();
-
-// CORS Configuration
-app.use(cors({
-    origin: ['http://127.0.0.1:5500', 'http://localhost:5500', 'https://talacademy.onrender.com'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    credentials: true,
-}));
-
-// Middleware
+app.use((req, res, next) => {
+    res.header({"Access-Control-Allow-Origin": "*"});
+    next();
+  }) 
 app.use(bodyParser.json());
 
 // API Routes
