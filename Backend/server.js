@@ -12,7 +12,6 @@ connectDB();
 //talel
 // Middleware
 app.use(cors());
--
 
 app.use(bodyParser.json());
 
