@@ -115,7 +115,7 @@ function logout() {
     localStorage.removeItem('token');
 
     // Optionally, send a logout request to the server (if needed)
-    fetch('http://localhost:5000/api/auth/logout', {
+    fetch('https://talacademyback.onrender.com/api/auth/logout', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

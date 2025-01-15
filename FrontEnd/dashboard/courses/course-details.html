@@ -106,7 +106,7 @@
     const token = localStorage.getItem('token');
 
     try {
-        const courseResponse = await fetch(`http://localhost:5000/api/course/${courseCode}`, {
+        const courseResponse = await fetch(`https://talacademyback.onrender.com/api/course/${courseCode}`, {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -214,7 +214,7 @@
     }
 
     try {
-        const userResponse = await fetch('http://localhost:5000/api/auth/dashboard', {
+        const userResponse = await fetch('https://talacademyback.onrender.com/api/auth/dashboard', {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` },
         });
@@ -258,7 +258,7 @@ if (uploadForm) {
         formData.append('file', file);
 
         const xhr = new XMLHttpRequest();
-        xhr.open('POST', `http://localhost:5000/api/course/${courseCode}/upload`, true);
+        xhr.open('POST', `https://talacademyback.onrender.com/api/course/${courseCode}/upload`, true);
         xhr.setRequestHeader('Authorization', `Bearer ${token}`);
 
         xhr.upload.addEventListener('progress', (event) => {

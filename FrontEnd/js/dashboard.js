@@ -1,5 +1,5 @@
 // Define API Base URL
-const API_BASE_URL = "http://localhost:5000";
+const API_BASE_URL = "https://talacademyback.onrender.com";
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = localStorage.getItem('token');

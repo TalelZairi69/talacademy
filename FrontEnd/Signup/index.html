@@ -314,7 +314,7 @@
     console.log({ username, email, password, phone, role, gender, invitationCode }); // Debug payload
 
     try {
-        const response = await fetch('http://localhost:5000/api/auth/signup', {
+        const response = await fetch('https://talacademyback.onrender.com/api/auth/signup', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ username, email, password, phone, role, gender, invitationCode }), // Include phone
@@ -324,7 +324,7 @@
             const data = await response.json();
 
             // Automatically log the user in
-            const loginResponse = await fetch('http://localhost:5000/api/auth/login', {
+            const loginResponse = await fetch('https://talacademyback.onrender.com/pi/auth/login', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
